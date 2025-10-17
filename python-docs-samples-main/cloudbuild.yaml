@@ -1,13 +1,17 @@
 steps:
 # Passo 1: Construir a imagem Docker
+# A linha 'dir' diz ao Cloud Build para entrar nesta pasta ANTES de executar o comando.
 - name: 'gcr.io/cloud-builders/docker'
+  dir: 'python-docs-samples-main/run/helloworld' # <-- ADICIONE ESTA LINHA!
   args: ['build', '-t', '${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE_NAME}:${SHORT_SHA}', '.']
 
 # Passo 2: Enviar a imagem para o Artifact Registry
+# Este passo não precisa do 'dir', pois ele só precisa do nome da imagem.
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', '${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE_NAME}:${SHORT_SHA}']
 
 # Passo 3: Implantar a nova imagem no Cloud Run
+# Este passo também não precisa do 'dir'.
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args:
@@ -22,10 +26,10 @@ steps:
   - 'managed'
   - '--allow-unauthenticated'
 
-# Substituições - ajuste se necessário
+# Substituições
 substitutions:
   _LOCATION: 'southamerica-east1'
-  _REPO_NAME: 'ollama-repo' # Podemos reutilizar o mesmo repositório do Artifact Registry
+  _REPO_NAME: 'ollama-repo'
   _SERVICE_NAME: 'hello-cloudrun-demo'
 
 options:
