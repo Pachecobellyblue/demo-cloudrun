@@ -28,7 +28,7 @@ steps:
 
 # Substituições
 substitutions:
-  _LOCATION: 'southamerica-east1'
+  _LOCATION: 'us-east4'
   _REPO_NAME: 'ollama-repo'
   _SERVICE_NAME: 'hello-cloudrun-demo'
 
